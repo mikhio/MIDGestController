@@ -91,6 +91,10 @@ def main():
 	lastPosY = 0
 
 	move_cof = 0.002
+
+	move_sens = [2.0, 3.0]
+	move_div = 100.
+
 	rotate_cof = 50.
 	data_round = 10
 
@@ -125,26 +129,24 @@ def main():
 		prev_mouse_pos = [*mouse_pos]
 
 		dpos = str(ser.readline())[2:-5].split(' ')
-		dmove = [
-			(math.floor(float(dpos[0])*data_round)/data_round if float(dpos[0]) >= 0 else math.ceil(float(dpos[0])*data_round)/data_round),
-			(math.floor(float(dpos[2])*data_round)/data_round if float(dpos[2]) >= 0 else math.ceil(float(dpos[2])*data_round)/data_round),
-			(math.floor(float(dpos[1])*data_round)/data_round if float(dpos[1]) >= 0 else math.ceil(float(dpos[1])*data_round)/data_round)
-		]
-		print(dpos, dmove)
-		# myBox.move(dmove)
-		# roll yaw pitch
+		dmove = []
+		for i in range(len(dpos)):
+			dmove.append(math.floor(float(dpos[i])*data_round)/data_round if float(dpos[i]) >= 0 else math.ceil(float(dpos[i])*data_round)/data_round)
+		print(dmove)
 
-		if math.fabs(dmove[0]) > 0:
-			glRotatef(-math.degrees(dmove[0])/rotate_cof, 0., 0., 1.) 
-			# print("ZZZZZ")
-		if math.fabs(dmove[1]) > 0:
-			glRotatef(-math.degrees(dmove[1])/rotate_cof, 0., 1., 0.)
-			# print("YYYYY")
-		if math.fabs(dmove[2]) > 0:
-			glRotatef(math.degrees(dmove[2])/rotate_cof, 1., 0., 0.)
-			# print("XXXXXX")
-		# myBox.rotate(1, [1., 0., 0.])
-		# myBox.rotate(1, [0., 1., 0.])
+		# FOR ACCEL MOVING LOCALLY
+		myBox.move([-dmove[4]/move_div if math.fabs(dmove[4]) > move_sens[1] else 0., 0., dmove[3]/move_div if math.fabs(dmove[3]) > move_sens[0] else 0.])
+
+
+		# FOR GYRO ROTOATION
+		# if math.fabs(dmove[0]) > 0:
+		# 	glRotatef(-math.degrees(dmove[0])/rotate_cof, 0., 0., 1.) 
+		# if math.fabs(dmove[1]) > 0:
+		# 	glRotatef(-math.degrees(dmove[1])/rotate_cof, 0., 1., 0.)
+		# if math.fabs(dmove[2]) > 0:
+		# 	glRotatef(math.degrees(dmove[2])/rotate_cof, 1., 0., 0.)
+
+
 
 
 		if pygame.key.get_pressed()[pygame.K_1]:

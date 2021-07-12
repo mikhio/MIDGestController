@@ -26,15 +26,15 @@ void loop() {
   IMU.readSensor();
   Serial.print(IMU.getGyroX_rads(),6);
   Serial.print(" ");
+  Serial.print(IMU.getGyroZ_rads(),6);
+  Serial.print(" ");
   Serial.print(IMU.getGyroY_rads(),6);
   Serial.print(" ");
-  Serial.println(IMU.getGyroZ_rads(),6);
-  // display the data
-//  Serial.print(IMU.getAccelX_mss(),6);
-//  Serial.print("\t");
-//  Serial.print(IMU.getAccelY_mss(),6);
-//  Serial.print("\t");
-//  Serial.print(IMU.getAccelZ_mss(),6);
+  Serial.print(IMU.getAccelX_mss(),6);
+  Serial.print(" ");
+  Serial.print(IMU.getAccelY_mss(),6);
+  Serial.print(" ");
+  Serial.println(IMU.getAccelZ_mss(),6);
 //  Serial.print("\t");
 //  Serial.print("\t");
 //  Serial.print(IMU.getMagX_uT(),6);
