@@ -1,23 +1,48 @@
+
 #include <MPU9250.h>
 
-MPU9250 mpu; // You can also use MPU9255 as is
+// an MPU9250 object with the MPU-9250 sensor on I2C bus 0 with address 0x68
+MPU9250 IMU(Wire,0x68);
+int status;
 
 void setup() {
-    Serial.begin(115200);
-    Wire.begin();
-    delay(2000);
+  // serial to display data
+  Serial.begin(115200);
+  while(!Serial) {}
 
-    mpu.setup(0x68);  // change to your own address
-
-    mpu.calibrateAccelGyro();
+  // start communication with IMU 
+  status = IMU.begin();
+  if (status < 0) {
+    Serial.println("IMU initialization unsuccessful");
+    Serial.println("Check IMU wiring or try cycling power");
+    Serial.print("Status: ");
+    Serial.println(status);
+    while(1) {}
+  }
 }
 
 void loop() {
-    if (mpu.update()) {
-        Serial.print(mpu.getPitch()); Serial.print(" ");
-        Serial.print(mpu.getRoll()); Serial.print(" ");
-        Serial.println(mpu.getYaw());
-    }
-
-    delay(100);
+  // read the sensor
+  IMU.readSensor();
+  Serial.print(IMU.getGyroX_rads(),6);
+  Serial.print(" ");
+  Serial.print(IMU.getGyroY_rads(),6);
+  Serial.print(" ");
+  Serial.println(IMU.getGyroZ_rads(),6);
+  // display the data
+//  Serial.print(IMU.getAccelX_mss(),6);
+//  Serial.print("\t");
+//  Serial.print(IMU.getAccelY_mss(),6);
+//  Serial.print("\t");
+//  Serial.print(IMU.getAccelZ_mss(),6);
+//  Serial.print("\t");
+//  Serial.print("\t");
+//  Serial.print(IMU.getMagX_uT(),6);
+//  Serial.print("\t");
+//  Serial.print(IMU.getMagY_uT(),6);
+//  Serial.print("\t");
+//  Serial.print(IMU.getMagZ_uT(),6);
+//  Serial.print("\t");
+//  Serial.println(IMU.getTemperature_C(),6);
+  delay(10);
 }
